@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
   before_action :set_post, only: [:show, :tags]
-  before_action :set_user_post, only: [:create, :update, :destroy]
+  before_action :set_user_post, only: [:update, :destroy]
 
   # GET /posts
   def index
@@ -30,6 +30,7 @@ class PostsController < ApplicationController
     # Busca tags con formato "#tag" en la descripción del post
     # Se hace una iteración sobre los tags encontrados
     # Luego se crea el tag para relacionarlo con el post y si ya existe, genera solo la relación
+    @post = current_user.posts
     tags = @post.description.scan(/(?:^|\s)#(\w+)/)
     tags.each do |tag|
       new_tag = Tag.where(label: tag).first_or_initialize
