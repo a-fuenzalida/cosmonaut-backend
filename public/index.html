@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <p id="welcome"></p>
+    <hr />
+    <form onsubmit="ingresar();">
+        <label for="username">Username</label>
+        <input type="text" id="username">
+        <br />
+        <label for="password">Password</label>
+        <input type="password" id="password">
+        <br />
+        <input type="submit">
+    </form>
+    <hr />
+    <div id="users" style="border: solid 1px; ">Usuarios<hr /></div>
+    <div id="posts" style="border: solid 1px; ">Posts<hr /></div>
+    <div id="tags" style="border: solid 1px; ">Tags<hr /></div>
+    <div id="post_tags" style="border: solid 1px; ">PostTags<hr /></div>
+    <div id="likes" style="border: solid 1px; ">Likes<hr /></div>
+    <div id="followings" style="border: solid 1px; ">Followings<hr /></div>
+    <div id="comments" style="border: solid 1px; ">Comments<hr /></div>
+<script>
+    function loadData() {
+        const entidades = ["users", "posts", "tags", "post_tags", "likes", "followings", "comments"]
+        entidades.forEach( ent => {
+            var url = "http://127.0.0.1:3000/api/v1/" + ent;
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", url, false);
+            // xhr.setRequestHeader("Authorization", sessionStorage.getItem('auth_token'));
+            xhr.send(null);
+            
+            var datos = JSON.parse(xhr.responseText);
+            
+            datos.forEach(function(dato) {
+                for(let [key, value] of Object.entries(dato)) {
+                    document.getElementById(ent).innerHTML += key + `: ` + (typeof value === 'object' && ( key == 'image' || key == 'picture' ) ? value.url : value) + `<br />`;
+                }
+                document.getElementById(ent).innerHTML += "<hr />";
+            });
+        });
+        
+    }
+
+    function ingresar() {
+
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        var url = "http://localhost:3000/authenticate";
+        var params = {"username": username, "password": password};
+        var xhr = new XMLHttpRequest();
+
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-type", "application/json");
+        xhr.send(JSON.stringify(params));
+        xhr.onreadystatechange = function () {
+            if(xhr.status === 200) {
+                // sessionStorage.setItem('auth_token', JSON.parse(xhr.responseText).auth_token);
+                // sessionStorage.setItem('user_id', JSON.parse(xhr.responseText).user_id);
+            }
+            else{
+                console.log("Error.");
+            }
+        }
+    }
+    
+    loadData();
+</script>
+</body>
+</html>
