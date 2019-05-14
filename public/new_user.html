@@ -8,26 +8,20 @@
 </head>
 <body>
     <form onsubmit="getBase64();">
-        <label for="username">Username</label>
-        <input type="text" id="username">
+        <label for="nickname">Nickname</label>
+        <input type="text" id="nickname">
         <br />
-        <label for="public_name">Public name</label>
-        <input type="text" id="public_name">
+        <label for="name">Name</label>
+        <input type="text" id="name">
         <br />
         <label for="password">Password</label>
         <input type="password" id="password">
-        <br />
-        <label for="password_confirmation">Password confirmation</label>
-        <input type="password" id="password_confirmation">
         <br />
         <label for="email">Email</label>
         <input type="text" id="email">
         <br />
         <label for="picture">Picture</label>
         <input type="file" id="picture">
-        <br />
-        <label for="datebirth">Date</label>
-        <input type="date" id="datebirth">
         <br />
         <input type="submit">
     </form>
@@ -46,22 +40,20 @@
     }
 
     function procesarDatos(picture_file) {
-        const username = document.getElementById("username").value;
-        const public_name = document.getElementById("public_name").value;
+        const nickname = document.getElementById("nickname").value;
+        const name = document.getElementById("name").value;
         const password = document.getElementById("password").value;
-        const password_confirmation = document.getElementById("password_confirmation").value;
         const email = document.getElementById("email").value;
-        const datebirth = document.getElementById("datebirth").value;
 
-        var url = "http://127.0.0.1:3000/api/v1/users/";
-        var params = {"username": username, "public_name": public_name, "password": password, "password_confirmation": password_confirmation, "email": email, "picture": picture_file, "datebirth": datebirth};
+        var url = "http://127.0.0.1:3000/auth";
+        var params = {"nickname": nickname, "name": name, "password": password, "email": email, "picture": picture_file};
         var xhr = new XMLHttpRequest();
 
         xhr.open("POST", url, true);
         xhr.setRequestHeader("Content-type", "application/json");
         xhr.send(JSON.stringify(params));
         xhr.onreadystatechange = function () {
-            if(xhr.status === 201) {
+            if(xhr.status === 200) {
                 console.log("si");
             }
             else{

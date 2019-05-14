@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::API
-    before_action :configure_permitted_parameters, if: :devise_controller?
     include DeviseTokenAuth::Concerns::SetUserByToken
+    before_action :configure_permitted_parameters, if: :devise_controller?
     rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
     private
@@ -9,8 +9,14 @@ class ApplicationController < ActionController::API
         end
 
         def configure_permitted_parameters
-            devise_parameter_sanitizer.permit(:sign_up, keys: [:nickname, :name, :email, :image, :password])
-            devise_parameter_sanitizer.permit(:sign_in, keys: [:nickname, :email, :password])
-            devise_parameter_sanitizer.permit(:account_update, keys: [:nickname, :name, :email, :image, :password, :information, :private])
+            devise_parameter_sanitizer.permit(
+                :sign_up, keys: [:registration, :nickname, :name, :email, :picture, :password]
+            )
+            devise_parameter_sanitizer.permit(
+                :sign_in, keys: [:nickname, :email, :password]
+            )
+            devise_parameter_sanitizer.permit(
+                :account_update, keys: [:nickname, :name, :email, :image, :password, :information]
+            )
         end
 end

@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   mount_devise_token_auth_for 'User', at: 'auth'
   scope 'api/v1' do
+    get 'me', :to => 'users#me'
     resources :users do
       resources :posts
       resources :likes
@@ -9,6 +10,7 @@ Rails.application.routes.draw do
       resources :comments
     end
 
+    get 'feed', :to => 'posts#feed'
     resources :posts do
       resources :tags
       resources :likes
