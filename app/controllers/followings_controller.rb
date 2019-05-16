@@ -4,7 +4,7 @@ class FollowingsController < ApplicationController
   # GET /followings
   def index
     if params[:user_id].present?
-      @followings = Following.where(user_id: params[:user_id])
+      @followings = Following.joins(:user).where(following_id: params[:user_id]).select("users.id, users.name, users.nickname, users.picture")
     else
       @followings = Following.all
     end
@@ -44,7 +44,7 @@ class FollowingsController < ApplicationController
 
   # Mostrar los seguidores del usuario
   def followers
-    @followings = User.find(params[:user_id]).following
+    @followings = User.find(params[:user_id]).following.joins(:user).select("users.id, users.name, users.nickname, users.picture, followings.created_at as since")
     render json: @followings
   end
 
